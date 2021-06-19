@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrelloClone</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+        document.getElementById("addTile").addEventListener("click", showForm());
+
+        function showForm(){
+            document.getElementById("newTileForm").style.visibility = "visible";
+        }
+
+
+    </script>
+</head>
+<body>
+    <h1 class="Title">Kanban Board</h1>
+    <br>
+
+    <div>
+        <table class="tabella_colonna1">
+            <tr>
+                <td>To Do</td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="addTile" type="submit" class="btn btn-dark" onclick="showForm()"> Add new tile</button>
+                    <!-- <form action="" method="POST"><!--{% csrf_token %}
+                        <button type="submit" class="btn btn-dark"> Add new tile</button>
+                    </form> -->
+                </td>
+            </tr>
+        </table>
+
+        <table class="tabella_colonna2">
+            <tr>
+                <td>Working On</td>
+            </tr>
+        </table>
+    </div>
+
+        <!-- Hidden Form-->
+        <br><br><br><br>
+        <div id="newTileForm">
+            <form action="" method="POST">{% csrf_token %}
+                <input type="text" name="tileTitle" id="tileTitle" placeholder="Tile Name">
+                <input type="text" name="tileAuthor" id="tileAuthor" placeholder="Tile Author">
+                <input type="radio" name="radio" id="tileOrg">
+                    <label for="tileOrg">Organizzativo</label>
+                <input type="radio" name="radio" id="tileInf">
+                    <label for="tileInf">Informativo</label>
+                <br>
+                <input type="text" name="tileDescription" id="tileDescription" placeholder="Tile Description">
+                <!--Upload Image-->
+                <label for="img">Select image:</label>
+                    <input type="file" id="img" name="img" accept="image/*">
+                <button type="submit" class="btn btn-dark"> Add new tile</button>
+            </form>
+        </div>
+    <!--<form action="" method="POST">{% csrf_token %}
+        <input type="text" name="nickname" placeholder="Nickname">
+        <button type="submit"> Gioca</button>
+    </form>-->
+</body>
+</html>

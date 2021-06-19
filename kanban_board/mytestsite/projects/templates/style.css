@@ -1,0 +1,25 @@
+.Title{
+    text-align: center;
+}
+
+table{
+    display:inline;
+    float:left;
+    table-layout: fixed;
+    width: auto;
+    border: 2px solid rgb(164, 26, 206);
+    text-align: center;
+}
+
+td{
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+#newTileForm{
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+}
