@@ -1,16 +1,16 @@
 from django.db import models
+from django.db.models.fields import TextField
 
 # Create your models here.
-class Album1(models.Model):
-    title = models.TextField()
-    genere = models.TextField()
-    band = models.TextField()
+class Tile(models.Model):
+    titolo = models.TextField()
+    autore = models.TextField()
+    contenuto_testo = models.TextField()
+    contenuto_img = models.ImageField()
+    tipo_messaggio = models.TextField()
 
-class Artist(models.Model):
-    name = models.TextField()
-    sex = models.TextField()
+    
 
-class Nomi(models.Model):
-    name = models.TextField()
+
 
 

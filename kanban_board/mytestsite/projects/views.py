@@ -1,8 +1,6 @@
 from django.http.response import Http404, HttpResponse
 from django.shortcuts import render
 from .forms import NameForm
-
-from .models import Nomi
 # Create your views here.
 
 def getNickname(request):
