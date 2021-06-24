@@ -47,18 +47,20 @@
         <!-- Hidden Form-->
         <br><br><br><br>
         <div id="newTileForm">
-            <form action="" method="POST">{% csrf_token %}
+            <form action="saveTile" method="POST">{% csrf_token %}
                 <input type="text" name="tileTitle" id="tileTitle" placeholder="Tile Name">
                 <input type="text" name="tileAuthor" id="tileAuthor" placeholder="Tile Author">
-                <input type="radio" name="radio" id="tileOrg">
-                    <label for="tileOrg">Organizzativo</label>
-                <input type="radio" name="radio" id="tileInf">
-                    <label for="tileInf">Informativo</label>
+
+                <input type="radio" name="tileMessaggio" id="tileOrg" value="Organizzativo">
+                    <label for="tileMessaggio">Organizzativo</label>
+                <input type="radio" name="tileMessaggio" id="tileInf" value="Informativo">
+                    <label for="tileMessaggio">Informativo</label>
+
                 <br>
                 <input type="text" name="tileDescription" id="tileDescription" placeholder="Tile Description">
-                <!--Upload Image-->
+                Upload Image
                 <label for="img">Select image:</label>
-                    <input type="file" id="img" name="img" accept="image/*">
+                    <input type="file" id="tileImg" name="tileImg" accept="image/*">
                 <button type="submit" class="btn btn-dark"> Add new tile</button>
             </form>
         </div>
