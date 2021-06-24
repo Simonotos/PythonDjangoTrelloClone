@@ -1,6 +1,8 @@
+from typing import NewType
 from django.http.response import Http404, HttpResponse
 from django.shortcuts import render
 from .forms import newTileForm
+from .models import Tile
 # Create your views here.
 
 
@@ -15,9 +17,9 @@ def saveTile(request):
             #immagine = form.cleaned_data['tileImg']
             tipo_messaggio = form.cleaned_data['tileMessaggio']
 
-            print(titolo, autore, descrizione, tipo_messaggio)
-            '''tabella_nomi = Nomi(name = stringa)
-            tabella_nomi.save()'''
+            #Create Row
+            tileRow = Tile(titolo = titolo, autore = autore, contenuto_testo = descrizione,tipo_messaggio = tipo_messaggio)
+            tileRow.save()
         else:
             raise Http404("Stringa inserita non valida")
 

@@ -9,6 +9,9 @@ class Tile(models.Model):
     contenuto_img = models.ImageField()
     tipo_messaggio = models.TextField()
 
+    class Meta:
+        db_table = "Tile"
+
     
 
 
