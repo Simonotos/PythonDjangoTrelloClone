@@ -24,10 +24,11 @@
     <!-- Hidden Form-->
     <br>
     
-    <!--<div class="addSomething">
-            <button type="submit" class="btn btn-dark" id="showColumnForm"> Add new Column</button>
-            <button type="submit" class="btn btn-dark" id="showTileForm"> Add new Tile</button>
-    </div>-->
+    <hr class="linea2">
+    <h4>Nel caso la visualizzazione si buggasse</h4>
+    <form method="GET" id="bug">
+        <button class="btn btn-dark" id="getTilesButton"> Get tiles</button>
+    </form>
 
     <br>
     <hr class="linea2">
@@ -53,10 +54,6 @@
                     <input type="file" id="tileImg" name="tileImg" accept="image/*">-->
                 <button type="submit" class="btn btn-dark" id="saveTileButton"> Add new tile</button>
             </form>
-
-            <form method="GET">
-                <button class="btn btn-dark" id="getTilesButton"> Get tiles</button>
-            </form>
         </div>
 
     <hr class="linea2">
@@ -72,12 +69,13 @@
 
     <hr class="linea2">
     <h2>Sposta Tile</h2>
+    <h4>Un Tile viene identificato da: Nome, Colonna di appartenza e contenuto</h4>
         <!-- Form Sposta Tile-->
         <div class="newColumnForm">
             <form id="moveForm" method="post">{% csrf_token %}
                 <input type="text" name="nomeTile" id="nomeTile" placeholder="Tile Name">
                 <input type="text" name="nomeColonna" id="nomeColonna" placeholder="Column Name">
-                <input type="text" name="contenuto" id="contenuto" placeholder="Description">
+                <input type="text" name="contenuto" id="contenuto" placeholder="Contenuto">
                 <button type="submit" class="btn btn-dark" id="moveTileButton"> Move Tile</button>
             </form>
         </div>
