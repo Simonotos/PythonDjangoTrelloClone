@@ -1,3 +1,9 @@
+body{
+    background-color: rgba(9, 9, 9, 0.904);
+    color: white;
+    font-family: 'Chakra Petch', sans-serif;
+}
+
 .Title{
     text-align: center;
 }
@@ -16,10 +22,84 @@ td{
     padding-right: 100px;
 }
 
-#newTileForm{
-    height: 200px;
-    display: flex;
-    align-items: center;
+label{
+    font-weight: bold;
+    margin-right: 10px;
+    color: gray;
+}
+
+.linea1{
+    border-top: 5px;
+    border-style: dotted;
+    height: 1px;
+    width: 30px;
+    color: rgb(183, 2, 255);
+    padding-top: 60px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}   
+
+.linea2{
+    border-top: 5px;
+    border-style: dotted;
+    height: 1px;
+    width: 10px;
+    color: rgb(183, 2, 255);
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.newTileForm{
     justify-content: center;
+    display: flex;
+}
+
+.newColumnForm{
+    justify-content: center;
+    display: flex;
+}
+
+.columnDiv{
     visibility: hidden;
 }
+
+.kanban{
+    display: inline-block;
+}
+
+.columnDiv{
+    display: inline-block;
+}
+
+.addSomething{
+    display: flex;
+    justify-content: space-between;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 10px 0;
+}
+
+h2, h4{
+    text-align: center;
+}
+
+.columnTitle{
+    display: inline-block;
+    padding-top: 10px;
+}
+
+#trashButton{
+    margin-right: 25px;
+    margin-left: 25px;
+}
+
+#statusButton{
+    margin-left: 25px;
+}
+
+
+
+
+
+
+

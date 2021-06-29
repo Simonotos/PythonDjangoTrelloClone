@@ -6,48 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrelloClone</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="./static/css/style.css">
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300&display=swap" rel="stylesheet"> 
 
-    <script>
-        document.getElementById("addTile").addEventListener("click", showForm());
-
-        function showForm(){
-            document.getElementById("newTileForm").style.visibility = "visible";
-        }
-
-
-    </script>
 </head>
 <body>
     <h1 class="Title">Kanban Board</h1>
     <br>
 
-    <div>
-        <table class="tabella_colonna1">
-            <tr>
-                <td>To Do</td>
-            </tr>
-            <tr>
-                <td>
-                    <button id="addTile" type="submit" class="btn btn-dark" onclick="showForm()"> Add new tile</button>
-                    <!-- <form action="" method="POST"><!--{% csrf_token %}
-                        <button type="submit" class="btn btn-dark"> Add new tile</button>
-                    </form> -->
-                </td>
-            </tr>
-        </table>
+    <div style="white-space:nowrap" id="kanbanFather">
 
-        <table class="tabella_colonna2">
-            <tr>
-                <td>Working On</td>
-            </tr>
-        </table>
     </div>
+    <!-- Hidden Form-->
+    <br>
+    
+    <!--<div class="addSomething">
+            <button type="submit" class="btn btn-dark" id="showColumnForm"> Add new Column</button>
+            <button type="submit" class="btn btn-dark" id="showTileForm"> Add new Tile</button>
+    </div>-->
 
-        <!-- Hidden Form-->
-        <br><br><br><br>
-        <div id="newTileForm">
-            <form action="saveTile" method="POST">{% csrf_token %}
+    <br>
+    <hr class="linea2">
+    <h2>Inserimento Tile</h2>
+    <!-- Form Inserimento nuovo Tile-->
+        <div class="newTileForm">
+            <form id="tileForm" method="post">{% csrf_token %}
                 <input type="text" name="tileTitle" id="tileTitle" placeholder="Tile Name">
                 <input type="text" name="tileAuthor" id="tileAuthor" placeholder="Tile Author">
 
@@ -59,14 +46,420 @@
                 <br>
                 <input type="text" name="tileDescription" id="tileDescription" placeholder="Tile Description">
                 Upload Image
-                <label for="img">Select image:</label>
-                    <input type="file" id="tileImg" name="tileImg" accept="image/*">
-                <button type="submit" class="btn btn-dark"> Add new tile</button>
+                <br>
+                <input type="text" name="tileColumn" id="tileColumn" placeholder="Tile Column">
+
+                <!--<label for="img">Select image:</label>
+                    <input type="file" id="tileImg" name="tileImg" accept="image/*">-->
+                <button type="submit" class="btn btn-dark" id="saveTileButton"> Add new tile</button>
+            </form>
+
+            <form method="GET">
+                <button class="btn btn-dark" id="getTilesButton"> Get tiles</button>
             </form>
         </div>
-    <!--<form action="" method="POST">{% csrf_token %}
-        <input type="text" name="nickname" placeholder="Nickname">
-        <button type="submit"> Gioca</button>
-    </form>-->
-</body>
+
+    <hr class="linea2">
+    <h2>Inserimento Colonna</h2>
+        <!-- Form Inserimento nuova Colonna-->
+        <div class="newColumnForm">
+            <form id="columnForm" method="post">{% csrf_token %}
+                <input type="text" name="columnName" id="columnName" placeholder="Column Name">
+                <button type="submit" class="btn btn-dark" id="saveColumnButton"> Add new Column</button>
+            </form>
+        </div>
+
+
+    <hr class="linea2">
+    <h2>Sposta Tile</h2>
+        <!-- Form Sposta Tile-->
+        <div class="newColumnForm">
+            <form id="moveForm" method="post">{% csrf_token %}
+                <input type="text" name="nomeTile" id="nomeTile" placeholder="Tile Name">
+                <input type="text" name="nomeColonna" id="nomeColonna" placeholder="Column Name">
+                <input type="text" name="contenuto" id="contenuto" placeholder="Description">
+                <button type="submit" class="btn btn-dark" id="moveTileButton"> Move Tile</button>
+            </form>
+        </div>
+
+    
+    <hr class="linea2">
+    <h2>Modifica Nome Colonna</h2>
+        <!-- Form Sposta Tile-->
+        <div class="newColumnForm">
+            <form id="moveForm" method="post">{% csrf_token %}
+                <input type="text" name="oldColumnName" id="oldColumnName" placeholder="Old Column Name">
+                <input type="text" name="newColumnName" id="newColumnName" placeholder="New Column Name">
+                <button type="submit" class="btn btn-dark" id="modifiyColumnButton"> Update </button>
+            </form>
+        </div>
+
+    
+        <br>
+    <hr class="linea2">
+    <h2>Modifica Tile</h2>
+    <h4>Inserire Nome e Colonna di appartenza del Tile da modificare</h4>
+    <!-- Form Modifica Tile-->
+    <div class="newTileForm">
+        <form id="tileForm" method="post">{% csrf_token %}
+            <input type="text" name="tileTitle2" id="tileTitle2" placeholder="Tile Name">
+            <input type="text" name="tileColumn2" id="tileColumn2" placeholder="Tile Column">
+            <br><br><br>
+
+            <input type="text" name="tileTitleModify" id="tileTitleModify" placeholder="New Tile Name">
+            <input type="text" name="tileAuthorModify" id="tileAuthorModify" placeholder="New Tile Author">
+            <br>
+            <input type="text" name="tileDescriptionModify" id="tileDescriptionModify" placeholder="New Tile Description">
+            <button type="submit" class="btn btn-dark" id="modifyTileButton"> Modify tile</button>
+        </form>
+
+        <!--<form method="GET">
+            <button class="btn btn-dark" id="getTilesButton"> Get tiles</button>
+        </form>-->
+    </div>
+    
+    
+    </body>
+
+    <!-- Jquery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script>
+
+        $(document).on("click", "#trashButton", function(){
+            deleteColumn($(this).parent().parent().parent().parent().get(0).className);  
+        })
+
+        $(document).on("click", "#statusButton", function(){
+            archiveColumn($(this).parent().parent().parent().parent().get(0).className);  
+        })
+
+        $("#saveTileButton").click(
+                    function(){
+                        saveTile();
+                    }
+        );
+
+        $("#saveColumnButton").click(
+                function(){
+                    saveColumn();
+                }
+        );
+
+        $("#moveTileButton").click(
+                function(){
+                    moveTile();
+                }
+        );
+
+        $("#modifiyColumnButton").click(
+                function(){
+                    modifyColumn();
+                }
+        );
+
+        $("#modifyTileButton").click(
+                function(){
+                    modifyTile();
+                }
+        );
+
+
+        $(document).ready(function () {
+            getColumns();
+        });
+
+
+    function saveColumn(){
+                event.preventDefault();
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    type: "post",
+                    url: "saveColumn",
+                    data: {columnName: $("#columnName").val()}, // from form
+                    encode: true,
+                    dataType: "text",
+
+                    success: function(data){
+                        alert('Colonna creata');
+                    },
+                    error: function (data){
+                        if(data.status == 404)
+                            alert('Errore di sintassi');
+                    },
+                });
+
+                getColumns();
+            }
+
+            
+    function saveTile(){
+        event.preventDefault();
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            url: "saveTile",
+            data: { tileTitle: $("#tileTitle").val(),
+                    tileAuthor: $("#tileAuthor").val(),
+                    tileDescription: $("#tileDescription").val(),
+                    tileMessaggio: $("input[name=tileMessaggio]:checked").val(),
+                    tileColumn: $("#tileColumn").val()}, // from form
+            encode: true,
+            dataType: "text",
+
+            success: function(data){
+                alert('Tile creato');
+            },
+            error: function (data){
+                if(data.status == 404)
+                    alert('errore di sintassi');
+            },
+        });
+
+        getColumns();
+    }
+
+    function getColumns(){
+        event.preventDefault();
+
+        setTimeout(() => {
+                $.ajax({
+                type: "GET",
+                url: "getColumns",
+                success: function(column) {
+                    
+                    $.each(column, function (i, item){
+                        var obj1 = JSON.stringify(item);
+                        var obj2 = JSON.parse(obj1);
+                        var nomeColonna = obj2.nomeColonna;
+                        $("." + nomeColonna).remove();
+                    });
+
+                    $.each(column, function (i, item){
+                        var obj1 = JSON.stringify(item);
+                        var obj2 = JSON.parse(obj1);
+
+                        $('#kanbanFather').append(
+                            '<div class="kanban">'+
+                            '<table class=' + obj2.nomeColonna +'>' + 
+                            '<tr id="title">'+
+                                '<td><h4 class="columnTitle">' + obj2.nomeColonna + '</h4>' +
+                                    '<button type="submit" class="btn btn-dark btn-sm" id="trashButton"><i class="fa fa-trash"></i></button>'+
+                                    '<button type="submit" class="btn btn-dark btn-sm" id="statusButton"><i class="fa fa-eye"></i></button>'
+                                    + '</td></tr></table></div>'
+                        );
+                    })}                  
+            });
+        }, 1 * 1000);
+
+        getTile();
+        
+    }
+
+
+    function getTile(){
+        event.preventDefault();
+
+        setTimeout(() => {
+            $.ajax({
+            type: "GET",
+            url: "getTiles",
+            success: function(tiles) {
+                
+                $.each(tiles, function (i, item){
+                    var obj1 = JSON.stringify(item);
+                    var obj2 = JSON.parse(obj1);
+                    var nomeColonna = obj2.nomeColonna;
+                    $("." + nomeColonna).find("tr:gt(0)").remove();
+                });
+
+                $.each(tiles, function (i, item){
+                    var obj1 = JSON.stringify(item);
+                    var obj2 = JSON.parse(obj1);
+                    var nomeColonna = obj2.nomeColonna;
+
+                    $('.' + nomeColonna).append(
+                        '<tr><td><label>Titolo:</label>' + obj2.titolo + '</td></tr>' +
+                        '<tr><td><label>Autore:</label>' + obj2.autore + '</td></tr>' +
+                        '<tr><td><label>Contenuto:</label>' + obj2.contenuto_testo + '</td></tr>' +
+                        '<tr><td><label>Tipo:</label>' + obj2.tipo_messaggio + '</td></tr>' +
+                        '<td><hr class="linea1"></td>'
+                    );
+                })
+            }
+        });
+        }, 2 * 1000);
+    }
+
+
+    function moveTile(){
+        event.preventDefault();
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            url: "moveTile",
+            data: {
+                nomeTile: $("#nomeTile").val(),
+                nomeColonna: $("#nomeColonna").val(),
+                contenuto: $("#contenuto").val(),
+                }, // from form
+            encode: true,
+            dataType: "text",
+
+            success: function(data){
+                alert('Tile spostato');
+            },
+            error: function (data){
+                if(data.status == 404)
+                    alert('Errore di sintassi o Nome Colonna nuova già presente');
+            },
+        });
+
+        getColumns();
+    }
+
+    function modifyColumn(){
+        event.preventDefault();
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            url: "modifyColumn",
+            data: {
+                oldColumnName: $("#oldColumnName").val(),
+                newColumnName: $("#newColumnName").val(),
+                }, // from form
+            encode: true,
+            dataType: "text",
+
+            success: function(data){
+                alert("Nome colonna aggiornato")
+                $("." + $("#oldColumnName").val()).remove();
+            },
+            error: function (data){
+                if(data.status == 404)
+                    alert('Errore di sintassi');
+            },
+        });
+
+        getColumns();
+    }
+
+
+    function modifyTile(){
+        event.preventDefault();
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            url: "modifyTile",
+            data: { tileTitle2: $("#tileTitle2").val(),
+                    tileColumn2: $("#tileColumn2").val(),
+
+                    tileTitleModify: $("#tileTitleModify").val(),
+                    tileAuthorModify: $("#tileAuthorModify").val(),
+                    tileDescriptionModify: $("#tileDescriptionModify").val(),
+                },
+            encode: true,
+            dataType: "text",
+
+            success: function(data){
+                alert("Tile aggiornato")
+            },
+            error: function (data){
+                if(data.status == 404)
+                    alert('Errore di sintassi');
+            },
+        });
+
+        getColumns();
+    }
+
+    function deleteColumn(columnName){
+        event.preventDefault();
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            url: "deleteColumn",
+            data: {param: columnName}, // from form
+            encode: true,
+            dataType: "text",
+
+            success: function(data){
+                $("." + columnName).remove();
+                alert('Colonna eliminata');
+            },
+            error: function (data){
+                if(data.status == 404)
+                    alert('non è stato possibile eliminare la colonna');
+            },
+        });
+
+        getColumns();
+    }
+
+    function archiveColumn(columnName){
+        event.preventDefault();
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            url: "archiveColumn",
+            data: {param: columnName}, // from form
+            encode: true,
+            dataType: "text",
+
+            success: function(data){
+                $("." + columnName).remove();
+                alert('Colonna archiviata');
+            },
+            error: function (data){
+                if(data.status == 404)
+                    alert('non è stato possibile archiviare la colonna');
+            },
+        });
+
+        getColumns();
+    }
+
+
+    </script>
 </html>
