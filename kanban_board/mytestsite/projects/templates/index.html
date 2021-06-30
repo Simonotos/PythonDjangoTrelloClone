@@ -23,6 +23,8 @@
     </div>
     <!-- Hidden Form-->
     <br>
+
+    <!--<img src="./static/images/FIGA2.png" alt="My image">-->
     
     <hr class="linea2">
     <h4>Nel caso la visualizzazione si buggasse</h4>
@@ -35,7 +37,7 @@
     <h2>Inserimento Tile</h2>
     <!-- Form Inserimento nuovo Tile-->
         <div class="newTileForm">
-            <form id="tileForm" method="post">{% csrf_token %}
+            <form id="tileForm" method="post" enctype="multipart/form-data">{% csrf_token %}
                 <input type="text" name="tileTitle" id="tileTitle" placeholder="Tile Name">
                 <input type="text" name="tileAuthor" id="tileAuthor" placeholder="Tile Author">
 
@@ -45,13 +47,16 @@
                     <label for="tileMessaggio">Informativo</label>
 
                 <br>
-                <input type="text" name="tileDescription" id="tileDescription" placeholder="Tile Description">
-                Upload Image
-                <br>
                 <input type="text" name="tileColumn" id="tileColumn" placeholder="Tile Column">
+                <input type="radio" name="tileContenuto" id="descrizione">
+                    <label for="tileContenuto">Descrizione</label>
+                <input type="radio" name="tileContenuto" id="immagine">
+                    <label for="tileContenuto">Immagine</label>
+                <br>
 
-                <!--<label for="img">Select image:</label>
-                    <input type="file" id="tileImg" name="tileImg" accept="image/*">-->
+                <input type="text" name="tileDescription" id="tileDescription" placeholder="Tile Description">
+                <input type="file" id="file" name="file" class="file"/>
+
                 <button type="submit" class="btn btn-dark" id="saveTileButton"> Add new tile</button>
             </form>
         </div>
@@ -134,8 +139,20 @@
         $("#saveTileButton").click(
                     function(){
                         saveTile();
+                        sendImg();
                     }
         );
+
+        $("input[type=radio]").on("click", function(){
+            if( $(this).get(0).id == 'descrizione'){
+                $('#file').css('visibility','hidden');
+                $('#tileDescription').css('visibility','visible');
+            }
+            else if( $(this).get(0).id == 'immagine'){
+                $('#tileDescription').css('visibility','hidden');
+                $('#file').css('visibility','visible');
+            }
+        })
 
         $("#saveColumnButton").click(
                 function(){
@@ -195,7 +212,22 @@
                 getColumns();
             }
 
-            
+    function sendImg(){
+        
+        event.preventDefault();
+
+        var fd = new FormData();    
+        fd.append('file', $('#file')[0].files[0]);
+
+        $.ajax({
+            url: "receiveImg",
+            data: fd,
+            processData: false,
+            contentType: false,
+            type: "POST",
+        });
+    }
+
     function saveTile(){
         event.preventDefault();
 
@@ -213,6 +245,7 @@
                     tileDescription: $("#tileDescription").val(),
                     tileMessaggio: $("input[name=tileMessaggio]:checked").val(),
                     tileColumn: $("#tileColumn").val()}, // from form
+
             encode: true,
             dataType: "text",
 
@@ -291,6 +324,7 @@
                         '<tr><td><label>Titolo:</label>' + obj2.titolo + '</td></tr>' +
                         '<tr><td><label>Autore:</label>' + obj2.autore + '</td></tr>' +
                         '<tr><td><label>Contenuto:</label>' + obj2.contenuto_testo + '</td></tr>' +
+                        '<tr><td><label>Contenuto:</label>' + '<img src=./static/static/' + obj2.contenuto_img + 'width="200" height="200"></td></tr>' +
                         '<tr><td><label>Tipo:</label>' + obj2.tipo_messaggio + '</td></tr>' +
                         '<td><hr class="linea1"></td>'
                     );

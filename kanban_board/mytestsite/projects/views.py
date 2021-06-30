@@ -1,30 +1,45 @@
+import os
 from django.db.models.expressions import Col, F
-from django.forms.fields import JSONString
+from django.forms.fields import ImageField, JSONString
 from django.http.request import HttpRequest
 from django.http.response import Http404, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 from .forms import modifyColumnForm, modifyTileForm, moveTileForm, newColumnForm, newTileForm
-from .models import Column, Tile
+from .models import Column, SaveImage, Tile
 from django.contrib import messages
 from django.core import serializers
-# Create your views here.
+from django.core.files import File
 
+from .import globalVariables
+
+#Image
+from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
+
+
+# Create your views here.
 
 @csrf_exempt
 def saveTile(request):
-    #print("Entri nel saveTile")
+    print("Entri nel saveTile")
+
     if request.method == 'POST':
+
+        trovato : bool = False
+
+        while globalVariables.image == None:
+            trovato = False
+
         form = newTileForm(request.POST)
 
         if form.is_valid():
+
             titolo : str = form.cleaned_data['tileTitle']
             autore : str = form.cleaned_data['tileAuthor']
             descrizione : str = form.cleaned_data['tileDescription']
-            #immagine = form.cleaned_data['tileImg']
             tipo_messaggio = form.cleaned_data['tileMessaggio']
             nomeColonna : str = form.cleaned_data['tileColumn']
-
 
             #Cerco se la colonna inserita dall'utente esiste
             nomeColonna : str = nomeColonna.replace(' ', '')
@@ -43,14 +58,23 @@ def saveTile(request):
                 column = Column(nomeColonna = nomeColonnaInput)
                 column.save()
             #Fine Cerco
+            
+
+            field_name = 'image'
+            obj = SaveImage.objects.first()
+            field_value = getattr(obj, field_name)
+            stringa = str(field_value)
+            stringa = stringa[16:]
 
             #Create Row
-            tileRow = Tile(titolo = titolo, autore = autore, contenuto_testo = descrizione,tipo_messaggio = tipo_messaggio, nomeColonna = nomeColonnaInput)
+            tileRow = Tile(titolo = titolo, autore = autore, contenuto_testo = descrizione,contenuto_img =stringa ,tipo_messaggio = tipo_messaggio, nomeColonna = nomeColonnaInput)
             tileRow.save()
+            #SaveImage.delete()
         else:
+            print(form.errors)
             return HttpResponse(status = 404) #Stringa inserita non valida
         
-        return HttpResponse("Created")
+    return HttpResponse("Created")
     
 
 @csrf_exempt
@@ -93,8 +117,9 @@ def getTiles(request):
     #print("popola tiles")
     
     if request.method == 'GET':
-        data = list(Tile.objects.values())
-
+        lista1 = Tile.objects.all().values()
+        lista2 = list(lista1)
+        data = lista2
         return JsonResponse(data, safe=False)
 
 def getColumns(request):
@@ -322,6 +347,18 @@ def restoreColumn(request):
                 obj.save()
             
     return HttpResponse("Colonna ripristinata")
+
+@csrf_exempt
+def receiveImg(request):
+    print("receiveImg")
+
+    if request.method == 'POST':
+        image = request.FILES.get('file')
+        globalVariables.image = image
+        save_img = SaveImage(image = image)
+        save_img.save()
+
+    return HttpResponse("T'apposto")
 
 
 

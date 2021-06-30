@@ -3,11 +3,10 @@ from django import forms
 class newTileForm(forms.Form):
     tileTitle = forms.CharField(label='tileTitle', max_length=100)
     tileAuthor = forms.CharField(label='tileAuthor', max_length=100)
-    tileDescription = forms.CharField(label='tileDescription', max_length=100)
+    tileDescription = forms.CharField(label='tileDescription', max_length=100, required=False)
     CHOICES = [('Organizzativo', 'Organizzativo'),('Informativo', 'Informativo')]
     tileMessaggio = forms.CharField(label='tileMessaggio', widget=forms.RadioSelect(choices=CHOICES))
     tileColumn = forms.CharField(label='tileColumn', max_length=100)
-    #tileImg = forms.ImageField(label='tileImg')
 
 
 class newColumnForm(forms.Form):

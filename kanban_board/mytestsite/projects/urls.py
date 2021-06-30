@@ -15,4 +15,5 @@ urlpatterns = [
     path('deleteColumn', views.deleteColumn, name='deleteColumn'),
     path('archiveColumn', views.archiveColumn, name='archiveColumn'),
     path('restoreColumn', views.restoreColumn, name='restoreColumn'),
+    path('receiveImg', views.receiveImg, name='receiveImg'),
 ]
