@@ -1,22 +1,10 @@
-import os
-from django.db.models.expressions import Col, F
-from django.forms.fields import ImageField, JSONString
-from django.http.request import HttpRequest
-from django.http.response import Http404, HttpResponse, JsonResponse
-from django.shortcuts import redirect, render
+from django.http.response import HttpResponse, JsonResponse
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from .forms import modifyColumnForm, modifyTileForm, moveTileForm, newColumnForm, newTileForm
+from .forms import deleteTileForm, modifyColumnForm, modifyTileForm, moveTileForm, newColumnForm, newTileForm
 from .models import Column, SaveImage, Tile
-from django.contrib import messages
-from django.core import serializers
-from django.core.files import File
 
 from .import globalVariables
-
-#Image
-from django.core.files import File
-from django.core.files.temp import NamedTemporaryFile
-
 
 # Create your views here.
 
@@ -28,9 +16,6 @@ def saveTile(request):
 
         trovato : bool = False
 
-        while globalVariables.image == None:
-            trovato = False
-
         form = newTileForm(request.POST)
 
         if form.is_valid():
@@ -40,6 +25,10 @@ def saveTile(request):
             descrizione : str = form.cleaned_data['tileDescription']
             tipo_messaggio = form.cleaned_data['tileMessaggio']
             nomeColonna : str = form.cleaned_data['tileColumn']
+
+            if descrizione == "":
+                while globalVariables.image == None:
+                    trovato = False
 
             #Cerco se la colonna inserita dall'utente esiste
             nomeColonna : str = nomeColonna.replace(' ', '')
@@ -61,7 +50,7 @@ def saveTile(request):
             
 
             field_name = 'image'
-            obj = SaveImage.objects.first()
+            obj = SaveImage.objects.last()
             field_value = getattr(obj, field_name)
             stringa = str(field_value)
             stringa = stringa[16:]
@@ -69,7 +58,7 @@ def saveTile(request):
             #Create Row
             tileRow = Tile(titolo = titolo, autore = autore, contenuto_testo = descrizione,contenuto_img =stringa ,tipo_messaggio = tipo_messaggio, nomeColonna = nomeColonnaInput)
             tileRow.save()
-            #SaveImage.delete()
+            globalVariables.image = None
         else:
             print(form.errors)
             return HttpResponse(status = 404) #Stringa inserita non valida
@@ -148,10 +137,10 @@ def moveTile(request):
         if form.is_valid():
                 nomeTile : str = form.cleaned_data['nomeTile']
                 nomeColonna : str = form.cleaned_data['nomeColonna']
-                contenuto : str = form.cleaned_data['contenuto']
+                tileMessaggio2 : str = form.cleaned_data['tileMessaggio2']
 
-                print(nomeTile + nomeColonna + contenuto)
-
+                print(tileMessaggio2)
+                
                 #Cerco se la colonna inserita dall'utente esiste
                 nomeColonna : str = nomeColonna.replace(' ', '')
                 nomeColonnaInput : str = nomeColonna.lower()
@@ -174,15 +163,19 @@ def moveTile(request):
                     titoloTile = item.titolo.replace(' ', '')
 
                     if titoloTile.lower() == nomeTileInput:
-                        contenutoTile  = item.contenuto_testo.replace(' ', '')
-                        contenuto = contenuto.replace(' ', '')
 
-                        if contenutoTile.lower() == contenuto.lower():
-                            trovato_tile = True
-                            save_tile = item
+                        if tileMessaggio2 == "Descrizione":
+                            if item.contenuto_testo != "":
+                                trovato_tile = True
+                                save_tile = item
+
+                        if tileMessaggio2 != "Descrizione":
+                            if item.contenuto_testo == "":
+                                trovato_tile = True
+                                save_tile = item
 
                 if (trovato_tile == True & trovata_colonna == True):
-                    save_tile.nomeColonna = nomeColonna
+                    save_tile.nomeColonna = nomeColonnaInput
                     save_tile.save()
                 elif (trovato_tile == False and trovata_colonna == False):
                     return HttpResponse(status = 404) #Tile o Colonna non presente'''
@@ -279,16 +272,42 @@ def modifyTile(request):
                         save_tile = item
 
                 if trovato_tile == True:
-                    save_tile.titolo = tileTitleModify
-                    save_tile.autore = tileAuthorModify
-                    save_tile.contenuto_testo = tileDescriptionModify
-                    save_tile.save()
+                    if tileDescriptionModify == "":
+                        while globalVariables.image == None:
+                            trovato = False
+                        
+                        field_name = 'image'
+                        obj = SaveImage.objects.last()
+
+                        while obj == None:
+                            obj = SaveImage.objects.last()
+
+                        field_value = getattr(obj, field_name)
+                        stringa = str(field_value)
+                        stringa = stringa[16:]
+
+                        #Update Values
+                        save_tile.titolo = tileTitleModify
+                        save_tile.autore = tileAuthorModify
+                        save_tile.contenuto_testo = tileDescriptionModify
+                        save_tile.contenuto_img = stringa
+                        save_tile.save()
+                        
+                        
+                        globalVariables.image = None
+
+                    if tileDescriptionModify != "":
+                        #Update Values
+                        save_tile.titolo = tileTitleModify
+                        save_tile.autore = tileAuthorModify
+                        save_tile.contenuto_testo = tileDescriptionModify
+                        save_tile.save()
                 else:
                     return HttpResponse(status = 404)
         else:
             return HttpResponse(status = 404) #Stringa inserita non valida
 
-        return HttpResponse("Colonna creata")
+        return HttpResponse("Tile modificato")
 
 @csrf_exempt
 def deleteColumn(request):
@@ -311,6 +330,55 @@ def deleteColumn(request):
                 obj2.delete()
             
     return HttpResponse("Colonna eliminata")
+
+
+@csrf_exempt
+def deleteTile(request):
+
+    if request.method == 'POST':
+        form = deleteTileForm(request.POST)
+
+        if form.is_valid():
+                #Check data
+                tileTitle3 : str = form.cleaned_data['tileTitle3']
+                tileColumn3 : str = form.cleaned_data['tileColumn3'] 
+                tileMessaggio3 : str = form.cleaned_data['tileMessaggio3'] 
+
+                #Cerco se il tile con tale colonna esiste
+                tileTitle3 : str = tileTitle3.replace(' ', '')
+                tileTitle3Input : str = tileTitle3.lower()
+
+                tileColumn3 : str = tileColumn3.replace(' ', '')
+                tileColumn3Input : str = tileColumn3.lower()
+
+                oggetti_tile = Tile.objects.all()
+                trovato_tile : bool = False
+
+                for item in oggetti_tile:
+                    nomeTitleTile = item.titolo.replace(' ', '')
+                    nomeColumnTile = item.nomeColonna.replace(' ', '')
+                    
+                    if nomeTitleTile.lower() == tileTitle3Input and nomeColumnTile.lower() == tileColumn3Input:
+
+                        if tileMessaggio3 == "Descrizione":
+                            if item.contenuto_testo != "":
+                                trovato_tile = True
+                                save_tile = item
+
+                        if tileMessaggio3 != "Descrizione":
+                            if item.contenuto_testo == "":
+                                trovato_tile = True
+                                save_tile = item
+
+                if trovato_tile == True:
+                    save_tile.delete()
+                else:
+                    return HttpResponse(status = 404)
+        else:
+            return HttpResponse(status = 404) #Stringa inserita non valida
+
+        return HttpResponse("Colonna creata")
+
 
 @csrf_exempt
 def archiveColumn(request):
@@ -353,6 +421,7 @@ def receiveImg(request):
     print("receiveImg")
 
     if request.method == 'POST':
+        SaveImage.objects.all().delete()
         image = request.FILES.get('file')
         globalVariables.image = image
         save_img = SaveImage(image = image)

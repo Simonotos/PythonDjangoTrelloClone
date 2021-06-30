@@ -7,7 +7,7 @@
     <title>TrelloClone</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="./static/css/style.css">
+    <link rel="stylesheet" href="./static/style.css">
     <!-- Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -98,13 +98,22 @@
                     var obj2 = JSON.parse(obj1);
                     var nomeColonna = obj2.nomeColonna;
 
-                    $('.' + nomeColonna).append(
+                    if (obj2.contenuto_testo != ""){
+                        $('.' + nomeColonna).append(
                         '<tr><td><label>Titolo:</label>' + obj2.titolo + '</td></tr>' +
                         '<tr><td><label>Autore:</label>' + obj2.autore + '</td></tr>' +
                         '<tr><td><label>Contenuto:</label>' + obj2.contenuto_testo + '</td></tr>' +
                         '<tr><td><label>Tipo:</label>' + obj2.tipo_messaggio + '</td></tr>' +
-                        '<td><hr class="linea1"></td>'
-                    );
+                        '<td><hr class="linea1"></td>');
+                    }
+                    else{
+                        $('.' + nomeColonna).append(
+                        '<tr><td><label>Titolo:</label>' + obj2.titolo + '</td></tr>' +
+                        '<tr><td><label>Autore:</label>' + obj2.autore + '</td></tr>' +
+                        '<tr><td><label>Contenuto:</label>' + '<img src=./static/images/projects/static/' + obj2.contenuto_img + ' width="300" height="200"></td></tr>' +
+                        '<tr><td><label>Tipo:</label>' + obj2.tipo_messaggio + '</td></tr>' +
+                        '<td><hr class="linea1"></td>');
+                    }
                 })
             }
         });

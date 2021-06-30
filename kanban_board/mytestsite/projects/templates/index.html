@@ -7,8 +7,10 @@
     <title>TrelloClone</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="./static/css/style.css">
+   
+    <link rel="stylesheet" href="./static/style.css">
     <!-- Font -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300&display=swap" rel="stylesheet"> 
@@ -23,8 +25,6 @@
     </div>
     <!-- Hidden Form-->
     <br>
-
-    <!--<img src="./static/images/FIGA2.png" alt="My image">-->
     
     <hr class="linea2">
     <h4>Nel caso la visualizzazione si buggasse</h4>
@@ -48,9 +48,9 @@
 
                 <br>
                 <input type="text" name="tileColumn" id="tileColumn" placeholder="Tile Column">
-                <input type="radio" name="tileContenuto" id="descrizione">
+                <input type="radio" name="tileContenuto" id="descrizione" class="tileContenuto">
                     <label for="tileContenuto">Descrizione</label>
-                <input type="radio" name="tileContenuto" id="immagine">
+                <input type="radio" name="tileContenuto" id="immagine" class="tileContenuto">
                     <label for="tileContenuto">Immagine</label>
                 <br>
 
@@ -74,13 +74,18 @@
 
     <hr class="linea2">
     <h2>Sposta Tile</h2>
-    <h4>Un Tile viene identificato da: Nome, Colonna di appartenza e contenuto</h4>
+    <h4>Un Tile viene identificato da: Nome e Contenuto</h4>
         <!-- Form Sposta Tile-->
         <div class="newColumnForm">
             <form id="moveForm" method="post">{% csrf_token %}
                 <input type="text" name="nomeTile" id="nomeTile" placeholder="Tile Name">
                 <input type="text" name="nomeColonna" id="nomeColonna" placeholder="Column Name">
-                <input type="text" name="contenuto" id="contenuto" placeholder="Contenuto">
+                
+                <input type="radio" name="tileMessaggio2" id="descrizione" value="Descrizione">
+                    <label for="tileMessaggio2">Descrizione</label>
+                <input type="radio" name="tileMessaggio2" id="immagine" value="Immagine">
+                    <label for="tileMessaggio2">Immagine</label>
+
                 <button type="submit" class="btn btn-dark" id="moveTileButton"> Move Tile</button>
             </form>
         </div>
@@ -90,7 +95,7 @@
     <h2>Modifica Nome Colonna</h2>
         <!-- Form Sposta Tile-->
         <div class="newColumnForm">
-            <form id="moveForm" method="post">{% csrf_token %}
+            <form id="modifyColumnForm" method="post">{% csrf_token %}
                 <input type="text" name="oldColumnName" id="oldColumnName" placeholder="Old Column Name">
                 <input type="text" name="newColumnName" id="newColumnName" placeholder="New Column Name">
                 <button type="submit" class="btn btn-dark" id="modifiyColumnButton"> Update </button>
@@ -104,7 +109,7 @@
     <h4>Inserire Nome e Colonna di appartenza del Tile da modificare</h4>
     <!-- Form Modifica Tile-->
     <div class="newTileForm">
-        <form id="tileForm" method="post">{% csrf_token %}
+        <form id="modifyTileForm" method="post">{% csrf_token %}
             <input type="text" name="tileTitle2" id="tileTitle2" placeholder="Tile Name">
             <input type="text" name="tileColumn2" id="tileColumn2" placeholder="Tile Column">
             <br><br><br>
@@ -112,13 +117,37 @@
             <input type="text" name="tileTitleModify" id="tileTitleModify" placeholder="New Tile Name">
             <input type="text" name="tileAuthorModify" id="tileAuthorModify" placeholder="New Tile Author">
             <br>
+                <input type="radio" name="tileContenuto2" id="descrizione2" class="tileContenuto2">
+                    <label for="tileContenuto2">Descrizione</label>
+                <input type="radio" name="tileContenuto2" id="immagine2" class="tileContenuto2">
+                    <label for="tileContenuto2">Immagine</label>
+                <br>
+
             <input type="text" name="tileDescriptionModify" id="tileDescriptionModify" placeholder="New Tile Description">
+            <input type="file" id="file2" name="file2" class="file2"/>
+
             <button type="submit" class="btn btn-dark" id="modifyTileButton"> Modify tile</button>
         </form>
+    </div>
+    <br>
 
-        <!--<form method="GET">
-            <button class="btn btn-dark" id="getTilesButton"> Get tiles</button>
-        </form>-->
+    <hr class="linea2">
+    <h2>Elimina Tile</h2>
+    <h4>Inserire Nome, Colonna di appartenza</h4>
+    <!-- Form Elimina Tile-->
+    <div class="newTileForm">
+        <form id="deleteTileForm" method="post">{% csrf_token %}
+            <input type="text" name="tileTitle3" id="tileTitle3" placeholder="Tile Name">
+            <input type="text" name="tileColumn3" id="tileColumn3" placeholder="Tile Column">
+
+            <input type="radio" name="tileMessaggio3" id="descrizione" value="Descrizione">
+                    <label for="tileMessaggio3">Descrizione</label>
+                <input type="radio" name="tileMessaggio3" id="immagine" value="Immagine">
+                    <label for="tileMessaggio3">Immagine</label>
+
+            <button type="submit" class="btn btn-dark" id="deleteTileButton"> Delete tile</button>
+        </form>
+
     </div>
     
     
@@ -143,7 +172,7 @@
                     }
         );
 
-        $("input[type=radio]").on("click", function(){
+        $("input.tileContenuto[type=radio]").on("click", function(){
             if( $(this).get(0).id == 'descrizione'){
                 $('#file').css('visibility','hidden');
                 $('#tileDescription').css('visibility','visible');
@@ -151,6 +180,17 @@
             else if( $(this).get(0).id == 'immagine'){
                 $('#tileDescription').css('visibility','hidden');
                 $('#file').css('visibility','visible');
+            }
+        })
+
+        $("input.tileContenuto2[type=radio]").on("click", function(){
+            if( $(this).get(0).id == 'descrizione2'){
+                $('#file2').css('visibility','hidden');
+                $('#tileDescriptionModify').css('visibility','visible');
+            }
+            else if( $(this).get(0).id == 'immagine2'){
+                $('#tileDescriptionModify').css('visibility','hidden');
+                $('#file2').css('visibility','visible');
             }
         })
 
@@ -174,7 +214,14 @@
 
         $("#modifyTileButton").click(
                 function(){
+                    sendImg2();
                     modifyTile();
+                }
+        );
+
+        $("#deleteTileButton").click(
+                function(){
+                    deleteTile();
                 }
         );
 
@@ -207,6 +254,9 @@
                         if(data.status == 404)
                             alert('Errore di sintassi');
                     },
+                    complete: function(data){
+                        $("#columnForm")[0].reset();
+                    },
                 });
 
                 getColumns();
@@ -218,6 +268,22 @@
 
         var fd = new FormData();    
         fd.append('file', $('#file')[0].files[0]);
+
+        $.ajax({
+            url: "receiveImg",
+            data: fd,
+            processData: false,
+            contentType: false,
+            type: "POST",
+        });
+    }
+
+    function sendImg2(){
+        
+        event.preventDefault();
+
+        var fd = new FormData();    
+        fd.append('file', $('#file2')[0].files[0]);
 
         $.ajax({
             url: "receiveImg",
@@ -256,6 +322,9 @@
                 if(data.status == 404)
                     alert('errore di sintassi');
             },
+            complete: function(data){
+                $("#tileForm")[0].reset();
+            },
         });
 
         getColumns();
@@ -280,7 +349,7 @@
                     $.each(column, function (i, item){
                         var obj1 = JSON.stringify(item);
                         var obj2 = JSON.parse(obj1);
-
+                        
                         $('#kanbanFather').append(
                             '<div class="kanban">'+
                             '<table class=' + obj2.nomeColonna +'>' + 
@@ -290,7 +359,7 @@
                                     '<button type="submit" class="btn btn-dark btn-sm" id="statusButton"><i class="fa fa-eye"></i></button>'
                                     + '</td></tr></table></div>'
                         );
-                    })}                  
+                    })}              
             });
         }, 1 * 1000);
 
@@ -319,15 +388,23 @@
                     var obj1 = JSON.stringify(item);
                     var obj2 = JSON.parse(obj1);
                     var nomeColonna = obj2.nomeColonna;
-
-                    $('.' + nomeColonna).append(
+                    
+                    if (obj2.contenuto_testo != ""){
+                        $('.' + nomeColonna).append(
                         '<tr><td><label>Titolo:</label>' + obj2.titolo + '</td></tr>' +
                         '<tr><td><label>Autore:</label>' + obj2.autore + '</td></tr>' +
                         '<tr><td><label>Contenuto:</label>' + obj2.contenuto_testo + '</td></tr>' +
-                        '<tr><td><label>Contenuto:</label>' + '<img src=./static/static/' + obj2.contenuto_img + 'width="200" height="200"></td></tr>' +
                         '<tr><td><label>Tipo:</label>' + obj2.tipo_messaggio + '</td></tr>' +
-                        '<td><hr class="linea1"></td>'
-                    );
+                        '<td><hr class="linea1"></td>');
+                    }
+                    else{
+                        $('.' + nomeColonna).append(
+                        '<tr><td><label>Titolo:</label>' + obj2.titolo + '</td></tr>' +
+                        '<tr><td><label>Autore:</label>' + obj2.autore + '</td></tr>' +
+                        '<tr><td><label>Contenuto:</label>' + '<img src=./static/images/projects/static/' + obj2.contenuto_img + ' width="300" height="200"></td></tr>' +
+                        '<tr><td><label>Tipo:</label>' + obj2.tipo_messaggio + '</td></tr>' +
+                        '<td><hr class="linea1"></td>');
+                    }
                 })
             }
         });
@@ -350,7 +427,7 @@
             data: {
                 nomeTile: $("#nomeTile").val(),
                 nomeColonna: $("#nomeColonna").val(),
-                contenuto: $("#contenuto").val(),
+                tileMessaggio2: $("input[name=tileMessaggio2]:checked").val(),
                 }, // from form
             encode: true,
             dataType: "text",
@@ -361,6 +438,9 @@
             error: function (data){
                 if(data.status == 404)
                     alert('Errore di sintassi o Nome Colonna nuova già presente');
+            },
+            complete: function(data){
+                $("#moveForm")[0].reset();
             },
         });
 
@@ -393,6 +473,9 @@
             error: function (data){
                 if(data.status == 404)
                     alert('Errore di sintassi');
+            },
+            complete: function(data){
+                $("#modifyColumnForm")[0].reset();
             },
         });
 
@@ -427,7 +510,10 @@
             },
             error: function (data){
                 if(data.status == 404)
-                    alert('Errore di sintassi');
+                    alert('Errore di sintassi o se non è così la invito a riprovare');
+            },
+            complete: function(data){
+                $("#modifyTileForm")[0].reset();
             },
         });
 
@@ -457,7 +543,7 @@
             error: function (data){
                 if(data.status == 404)
                     alert('non è stato possibile eliminare la colonna');
-            },
+            }
         });
 
         getColumns();
@@ -486,6 +572,41 @@
             error: function (data){
                 if(data.status == 404)
                     alert('non è stato possibile archiviare la colonna');
+            },
+        });
+
+        getColumns();
+    }
+
+    function deleteTile(){
+        event.preventDefault();
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            url: "deleteTile",
+            data: {
+                tileTitle3: $("#tileTitle3").val(),
+                tileColumn3: $("#tileColumn3").val(),
+                tileMessaggio3: $("input[name=tileMessaggio3]:checked").val(),
+            }, // from form
+            encode: true,
+            dataType: "text",
+
+            success: function(data){
+                alert('Tile eliminato');
+            },
+            error: function (data){
+                if(data.status == 404)
+                    alert('non è stato possibile eliminare il tile');
+            },
+            complete: function(data){
+                $("#deleteTileForm")[0].reset();
             },
         });
 

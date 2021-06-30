@@ -16,4 +16,5 @@ urlpatterns = [
     path('archiveColumn', views.archiveColumn, name='archiveColumn'),
     path('restoreColumn', views.restoreColumn, name='restoreColumn'),
     path('receiveImg', views.receiveImg, name='receiveImg'),
+    path('deleteTile', views.deleteTile, name='deleteTile'),
 ]
