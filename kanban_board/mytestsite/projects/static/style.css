@@ -110,6 +110,11 @@ h2, h4{
     visibility: hidden;
 }
 
+.deleteTileDiv{
+    justify-content: center;
+    display: flex;
+    padding-bottom: 50px;
+}
 
 
 
